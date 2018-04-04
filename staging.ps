@@ -1,0 +1,47 @@
+# set mac file path -- need help to do this more securely
+$filePath = "\users\daniel\repo\AzureChallenge\"
+
+# code source: 
+# https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-powershell
+
+# login manually to Azure  ** dont store credentials insecurely **
+Login-AzureRmAccount
+
+# provision in case of multiple subscriptions
+# Select-AzureRmSubscription -SubscriptionId "<SubscriptionId>"
+
+# create the Azure resource group
+$resourceGroup = "AzureChallengeResourceGroup";
+$location = "AustraliaEast"
+New-AzureRmResourceGroup $resourceGroup $location
+
+# create storage account
+$storageAccount = New-AzureRmStorageAccount -ResourceGroupName $resourceGroup `
+  -Name "AxureChallengeStorageAccount" `
+  -Location $location `
+  -SkuName Standard_LRS `
+  -Kind Storage
+
+$ctx = $storageAccount.Context
+
+# create blob container
+$containerName = "AzureChallengeBlob"
+New-AzureStorageContainer -Name $containerName -Context $ctx -Permission blob
+
+# upload a customer file
+$file = $filePath & "customer.csv" 
+Set-AzureStorageBlobContent -File $file`
+  -Container $containerName `
+  -Blob "customer.csv" `
+  -Context $ctx 
+
+# upload order file
+$file = $filePath & "order.csv" 
+Set-AzureStorageBlobContent -File $file `
+  -Container $containerName `
+  -Blob "order.csv" `
+  -Context $ctx
+
+# list blobs in container -- ideally return true/false test result
+Get-AzureStorageBlob -Container $ContainerName -Context $ctx | select Name
+
