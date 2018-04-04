@@ -12,12 +12,18 @@ plan:
 
 * config variables
 * create blob store
-* create pipeline
+* configure local files
+* create pipeline from local to blob
+* execute pipeline to import data from local to blob staging 
 * create DW
-* import data into DW
-* live query of DW from pbi 
-* bonus: import mode pbi
+* create external tables
+* execute polybase import to DW
+* create pbi template in direct query mode
 
 * all scripted.
 
-* tear down
+* tear down resource group
+
+Learnings:
+ARM templates
+
